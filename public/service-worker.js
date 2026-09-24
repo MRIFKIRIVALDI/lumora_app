@@ -1,0 +1,1 @@
+const CACHE='lumora-v1'; const ASSETS=['/','/login','/logo_lumora.png','/manifest.webmanifest']; self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))); self.addEventListener('fetch',e=>{if(e.request.method==='GET')e.respondWith(fetch(e.request).catch(()=>caches.match(e.request))) });

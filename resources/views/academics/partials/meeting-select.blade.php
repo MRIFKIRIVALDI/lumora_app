@@ -1,0 +1,1 @@
+<select name="learning_meeting_id" required><option value="">Pilih pertemuan</option>@foreach($meetings as $meeting)<option value="{{ $meeting->id }}">Pertemuan {{ $meeting->meeting_number }} — {{ $meeting->title }}</option>@endforeach</select>
