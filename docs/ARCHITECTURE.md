@@ -42,7 +42,7 @@ users (student) ── spp_bills
 
 ## QR realtime
 
-Stasiun QR menerbitkan token singkat melalui Reverb. Token diperbarui setiap detik, kedaluwarsa setelah delapan detik, dan hanya dapat digunakan sekali. Server tetap memvalidasi stasiun, token, masa berlaku, pengguna, serta jenis presensi; animasi di browser bukan sumber validasi.
+Stasiun QR menerbitkan token singkat melalui Reverb. Token diperbarui setiap detik, kedaluwarsa setelah delapan detik, dan hanya dapat digunakan sekali. Setiap stasiun memiliki sasaran `student` atau `teacher`. Admin dapat membuka QR guru dan murid; guru baru dapat membuka QR murid setelah presensi melalui QR admin. Server tetap memvalidasi stasiun, sasaran role, token, masa berlaku, pengguna, serta jenis presensi; animasi di browser bukan sumber validasi.
 
 ## Tema visual
 

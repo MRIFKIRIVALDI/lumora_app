@@ -20,9 +20,11 @@ class AttendanceActionController extends Controller
         $result = DB::transaction(function () use ($user, $data) {
             $qrToken = null;
             if (!empty($data['qr_token'])) {
-                $qrToken=DB::table('qr_tokens')->where('token_hash',hash('sha256',$data['qr_token']))->whereNull('used_at')->where('expires_at','>',now())->lockForUpdate()->first();
+                $qrToken=DB::table('qr_tokens')->join('qr_stations','qr_stations.id','=','qr_tokens.station_id')->where('token_hash',hash('sha256',$data['qr_token']))->whereNull('qr_tokens.used_at')->where('qr_tokens.expires_at','>',now())->select('qr_tokens.*','qr_stations.audience')->lockForUpdate()->first();
                 if (!$qrToken) return ['error'=>'Token QR tidak valid atau sudah kedaluwarsa. Pindai QR terbaru.'];
+                if ($qrToken->audience !== $user->role) return ['error'=>'QR ini tidak sesuai dengan jenis akun Anda.'];
             }
+            if($user->role==='teacher' && !$qrToken) return ['error'=>'Presensi guru wajib menggunakan QR khusus yang dibuka admin.'];
             $attendance = DB::table('attendances')->where('student_id', $user->id)->whereDate('date', today())->lockForUpdate()->first();
             $now = now()->format('H:i:s');
 

@@ -21,7 +21,7 @@ Status fitur secara rinci berada di [FEATURES.md](FEATURES.md). Dokumen ini berf
 ## Prioritas pengembangan berikutnya
 
 1. Melengkapi edit, hapus, validasi konflik, dan operasi massal untuk master akademik.
-2. Menambahkan konfigurasi lokasi sekolah, radius geofence, jam terlambat, dan prasyarat kehadiran guru sebelum stasiun QR aktif.
+2. Menambahkan konfigurasi lokasi sekolah, radius geofence, jam terlambat, kebijakan presensi pulang guru, dan audit stasiun QR.
 3. Melengkapi penyusun soal, pengerjaan kuis, pengumpulan tugas, penilaian, dan progres nyata pada kartu kelas.
 4. Mengaktifkan Google SSO tertutup dan Google Drive menggunakan kredensial sandbox sekolah.
 5. Mengintegrasikan payment gateway sandbox dengan verifikasi signature dan idempotensi webhook.

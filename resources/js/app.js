@@ -1,11 +1,13 @@
 ﻿import './bootstrap';
 import QRCode from 'qrcode';
+import { BrowserQRCodeReader } from '@zxing/browser';
 
 document.querySelector('#showPassword')?.addEventListener('click',()=>{const input=document.querySelector('#password'); input.type=input.type==='password'?'text':'password'});
 document.querySelectorAll('[data-email]').forEach(button=>button.addEventListener('click',()=>{document.querySelector('input[name=email]').value=button.dataset.email; document.querySelector('input[name=password]').value='password'}));
 const themeToggle=document.querySelector('#themeToggle');
 const syncThemeIcon=()=>{const icon=document.querySelector('.theme-icon');if(icon)icon.textContent=document.documentElement.classList.contains('dark')?'â˜€':'â˜¾'}; syncThemeIcon();
 themeToggle?.addEventListener('click',()=>{document.documentElement.classList.toggle('dark');localStorage.setItem('lumora-theme',document.documentElement.classList.contains('dark')?'dark':'light');syncThemeIcon()});
+document.querySelector('#accountThemeToggle')?.addEventListener('click',()=>themeToggle?.click());
 const notificationButton=document.querySelector('#notificationButton'),notificationDropdown=document.querySelector('#notificationDropdown');
 notificationButton?.addEventListener('click',event=>{event.stopPropagation();const open=notificationDropdown.classList.toggle('open');notificationButton.setAttribute('aria-expanded',String(open))});
 document.addEventListener('click',event=>{if(notificationDropdown&&!notificationDropdown.contains(event.target)){notificationDropdown.classList.remove('open');notificationButton?.setAttribute('aria-expanded','false')}});
@@ -38,5 +40,15 @@ if(stationScreen){
  const connection=window.Echo.connector.pusher.connection; connection.bind('connected',()=>{status.classList.add('connected');status.innerHTML='<i></i> Reverb terhubung'}); connection.bind('disconnected',()=>{status.classList.remove('connected');status.innerHTML='<i></i> Reverb terputus'});
  const rotate=async()=>{try{const response=await fetch(tokenUrl,{headers:{Accept:'application/json','X-Requested-With':'XMLHttpRequest'},cache:'no-store'});if(response.status===410){location.href='/presensi';return}if(!response.ok)throw new Error();draw(await response.json())}catch{status.classList.remove('connected');status.innerHTML='<i></i> Menunggu server Reverbâ€¦'}};
  rotate(); setInterval(rotate,1000); setInterval(()=>clockEl.textContent=new Date().toLocaleTimeString('id-ID').replaceAll('.',':'),1000);
+}
+
+const qrCamera=document.querySelector('#qrCamera');
+if(qrCamera){
+ const start=document.querySelector('#startQrCamera'),stop=document.querySelector('#stopQrCamera'),message=document.querySelector('#cameraMessage');
+ const reader=new BrowserQRCodeReader(); let controls=null,found=false;
+ const stopCamera=()=>{controls?.stop();controls=null;qrCamera.srcObject?.getTracks().forEach(track=>track.stop());start.disabled=false;stop.disabled=true};
+ start.addEventListener('click',async()=>{try{start.disabled=true;message.textContent='Mengaktifkan kamera belakang…';controls=await reader.decodeFromConstraints({video:{facingMode:{ideal:'environment'}}},qrCamera,(result,error)=>{if(!result||found)return;const value=result.getText();if(!value.includes('/presensi/scan/')){message.textContent='QR terbaca, tetapi bukan QR presensi Lumora.';return}found=true;message.textContent='QR ditemukan. Membuka konfirmasi…';stopCamera();location.href=value});stop.disabled=false;message.textContent='Kamera aktif. Arahkan ke QR presensi Lumora.'}catch(error){start.disabled=false;message.textContent='Kamera tidak dapat dibuka. Periksa izin kamera dan gunakan HTTPS atau localhost.'}});
+ stop.addEventListener('click',()=>{stopCamera();message.textContent='Kamera dimatikan.'});
+ window.addEventListener('beforeunload',stopCamera);
 }
 

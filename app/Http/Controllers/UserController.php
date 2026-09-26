@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
-    public function index(){ return view('users.index',['users'=>User::latest()->paginate(10),'roleCounts'=>User::select('role',DB::raw('count(*) as total'))->groupBy('role')->pluck('total','role')]); }
+    public function index(Request $request){ $role=$request->validate(['role'=>['nullable',Rule::in(['admin','teacher','student','parent'])]])['role']??null; return view('users.index',['users'=>User::when($role,fn($q)=>$q->where('role',$role))->latest()->paginate(10)->withQueryString(),'roleCounts'=>User::select('role',DB::raw('count(*) as total'))->groupBy('role')->pluck('total','role'),'roleFilter'=>$role]); }
     public function store(Request $request){ $data=$request->validate(['name'=>'required|max:100','email'=>'required|email|unique:users','role'=>['required',Rule::in(['admin','teacher','student','parent'])],'phone'=>'nullable|max:30','password'=>'required|min:8']); User::create($data); return back()->with('status','Akun berhasil dibuat. Pengguna kini dapat login.'); }
     public function toggle(User $user){ abort_if(auth()->id()===$user->id,422,'Akun sendiri tidak dapat dinonaktifkan.'); $user->update(['is_active'=>!$user->is_active]); return back()->with('status','Status akun diperbarui.'); }
     public function edit(User $user)

@@ -12,7 +12,9 @@ npm run build
 composer run dev:realtime
 ```
 
-Buka `http://127.0.0.1:8000`. Perintah terakhir menjalankan server Laravel, worker queue, Vite, dan Laravel Reverb. `migrate:fresh` menghapus seluruh tabel dan hanya aman untuk data demo/development.
+Buka `http://127.0.0.1:8000`. Perintah terakhir menjalankan Laravel, Reverb, worker queue, dan scheduler. Scheduler memfinalisasi murid tanpa QR/pengajuan menjadi alfa pukul 00.05 untuk hari sebelumnya. `migrate:fresh` menghapus seluruh tabel dan hanya aman untuk data demo/development.
+
+Pastikan `APP_URL=http://127.0.0.1:8000` untuk penggunaan dari komputer yang sama. URL tidak akan dapat dibuka jika proses Laravel belum dijalankan.
 
 Untuk penggunaan harian tanpa menghapus data:
 
@@ -27,10 +29,12 @@ Semua akun memakai kata sandi `password`.
 
 | Role | Email |
 |---|---|
-| Admin | `admin@lumora.test` |
-| Guru | `teacher@lumora.test` |
-| Murid | `student@lumora.test` |
-| Wali | `parent@lumora.test` |
+| Admin | `admin1@lumora.test` sampai `admin3@lumora.test` |
+| Guru | `guru1@lumora.test` sampai `guru6@lumora.test` |
+| Murid kelas 10 | `murid10.1@lumora.test` sampai `murid10.7@lumora.test` |
+| Murid kelas 11 | `murid11.1@lumora.test` sampai `murid11.7@lumora.test` |
+| Murid kelas 12 | `murid12.1@lumora.test` sampai `murid12.7@lumora.test` |
+| Wali | `wali1@lumora.test` sampai `wali10@lumora.test` |
 
 ## Pengujian
 

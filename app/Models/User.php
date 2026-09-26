@@ -25,7 +25,7 @@ class User extends Authenticatable
         'role',
         'phone',
         'is_active',
-        'identity_number', 'gender', 'birth_place', 'birth_date', 'address', 'bio', 'occupation',
+        'identity_number', 'nik', 'nis', 'nisn', 'nip', 'gender', 'birth_place', 'birth_date', 'address', 'bio', 'occupation',
         'emergency_contact_name', 'emergency_contact_phone', 'photo',
     ];
 

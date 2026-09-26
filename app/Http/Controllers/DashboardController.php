@@ -17,14 +17,15 @@ class DashboardController extends Controller
         };
         $announcements=DB::table('announcements')->where(fn($q)=>$q->whereNull('target_role')->orWhere('target_role',$user->role))->latest('published_at')->limit(3)->get();
         $schedule=DB::table('class_sessions')->join('subjects','subjects.id','=','class_sessions.subject_id')->join('school_classes','school_classes.id','=','class_sessions.school_class_id')->whereIn('class_sessions.id',$sessionIds)->select('class_sessions.*','subjects.name as subject','school_classes.name as class_name')->orderBy('start_time')->limit(6)->get();
-        $todayAttendance = $user->role === 'student' ? DB::table('attendances')->where('student_id',$user->id)->whereDate('date',today())->first() : null;
-        $attendanceCounts = DB::table('attendances')->whereIn('student_id',$studentIds)->select('status',DB::raw('count(*) as total'))->groupBy('status')->pluck('total','status');
+        $todayAttendance = $user->isRole('student','teacher') ? DB::table('attendances')->where('student_id',$user->id)->whereDate('date',today())->first() : null;
+        $attendanceCounts = DB::table('attendances')->whereIn('student_id',$studentIds)->whereDate('date',today())->select('status',DB::raw('count(*) as total'))->groupBy('status')->pluck('total','status');
+        $presentCount=(int)($attendanceCounts['hadir']??0)+(int)($attendanceCounts['terlambat']??0); $sickCount=(int)($attendanceCounts['sakit']??0); $permitCount=(int)($attendanceCounts['izin']??0); $alphaCount=max(0,$studentIds->count()-$presentCount-$sickCount-$permitCount);
         $paid = (float) DB::table('spp_bills')->whereIn('student_id',$studentIds)->where('status','paid')->sum('amount');
         $pending = (float) DB::table('spp_bills')->whereIn('student_id',$studentIds)->where('status','pending')->sum('amount');
         $charts = [
             'weekly'=>[82,88,91,86,94,90,96],
             'payments'=>[58,64,61,73,78,84],
-            'attendance'=>[(int)($attendanceCounts['hadir']??0),(int)($attendanceCounts['terlambat']??0),(int)($attendanceCounts['izin']??0),(int)($attendanceCounts['alpa']??0)],
+            'attendance'=>[$presentCount,$sickCount,$permitCount,$alphaCount],
             'finance'=>[$paid,$pending],
         ];
         $calendarEvents=DB::table('school_calendar')->where(fn($q)=>$q->whereNull('target_role')->orWhere('target_role',$user->role))->orderBy('date_start')->limit(12)->get();
@@ -37,7 +38,20 @@ class DashboardController extends Controller
             $pendingWork=DB::table('assignments')->join('class_sessions','class_sessions.id','=','assignments.class_session_id')->join('subjects','subjects.id','=','class_sessions.subject_id')->whereIn('assignments.class_session_id',$sessionIds)->where('due_date','>',now())->select('assignments.*','subjects.name as subject')->orderBy('due_date')->limit(6)->get();
         }
         if($user->role==='parent')$children=DB::table('users')->leftJoin('class_students','class_students.student_id','=','users.id')->leftJoin('school_classes','school_classes.id','=','class_students.school_class_id')->whereIn('users.id',$studentIds)->select('users.*','school_classes.name as class_name')->get();
+        $adminOverview=[]; $recentUsers=collect(); $classOverview=collect();
+        if($user->role==='admin'){
+            $adminOverview=[
+                'roles'=>DB::table('users')->select('role',DB::raw('count(*) as total'))->groupBy('role')->pluck('total','role'),
+                'classes'=>DB::table('school_classes')->count(), 'subjects'=>DB::table('subjects')->count(), 'sessions'=>DB::table('class_sessions')->count(),
+                'meetings'=>DB::table('learning_meetings')->count(), 'materials'=>DB::table('materials')->count(), 'assignments'=>DB::table('assignments')->count(), 'quizzes'=>DB::table('quizzes')->count(),
+                'student_attendance'=>DB::table('attendances')->join('users','users.id','=','attendances.student_id')->where('users.role','student')->whereDate('attendances.date',today())->count(),
+                'teacher_attendance'=>DB::table('attendances')->join('users','users.id','=','attendances.student_id')->where('users.role','teacher')->whereDate('attendances.date',today())->count(),
+                'submissions'=>DB::table('assignment_submissions')->count(), 'pending_bills'=>DB::table('spp_bills')->where('status','pending')->count(),
+            ];
+            $recentUsers=DB::table('users')->latest()->limit(5)->get();
+            $classOverview=DB::table('school_classes')->leftJoin('class_students',fn($join)=>$join->on('class_students.school_class_id','=','school_classes.id')->where('class_students.status','active'))->leftJoin('users','users.id','=','school_classes.homeroom_teacher_id')->select('school_classes.id','school_classes.name','school_classes.grade_level','users.name as homeroom',DB::raw('count(class_students.id) as students'))->groupBy('school_classes.id','school_classes.name','school_classes.grade_level','users.name')->orderBy('school_classes.grade_level')->get();
+        }
         $weekDates=collect(range(0,6))->map(fn($i)=>now()->startOfWeek()->addDays($i));
-        return view('dashboard',compact('user','stats','announcements','schedule','todayAttendance','charts','calendarEvents','studentSchedule','studentClasses','pendingWork','children','weekDates'));
+        return view('dashboard',compact('user','stats','announcements','schedule','todayAttendance','charts','calendarEvents','studentSchedule','studentClasses','pendingWork','children','weekDates','adminOverview','recentUsers','classOverview'));
     }
 }
