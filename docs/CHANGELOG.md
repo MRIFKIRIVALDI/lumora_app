@@ -1,5 +1,35 @@
 # Riwayat Perubahan
 
+## 2026-10-05
+
+- Mengganti seluruh simbol lama pada halaman Akun dengan ikon SVG modern yang sesuai fungsi, berukuran lebih jelas, dan memiliki warna kategori konsisten.
+- Memperbarui avatar profil, tombol arah, hover menu, serta tampilan light/dark halaman Akun.
+- Menyinkronkan README, daftar fitur, arsitektur, dan panduan pengembangan dengan sistem visual serta ikon terbaru.
+- Memperbaiki kontras teks, jam, tanggal, dan status tombol pada kartu presensi bergradasi.
+- Menambahkan kalender bulanan interaktif untuk guru dan murid dengan navigasi bulan sebelumnya, hari ini, dan bulan berikutnya.
+- Menampilkan jadwal pelajaran serta agenda sekolah langsung pada tanggal kalender terkait.
+- Menambahkan modul Nilai & Rapor dengan alur draft guru, pengisian nilai seluruh roster, pengajuan, dan persetujuan/penolakan admin.
+- Menambahkan perhitungan nilai akhir berbobot Tugas 25%, Kuis 20%, UTS 25%, dan UAS 30% serta predikat A–E.
+- Menambahkan menu Nilai & Rapor untuk admin/guru dan akses Dashboard khusus murid/wali.
+- Membatasi murid dan wali agar hanya dapat membaca rapor terkait yang telah disetujui admin.
+- Menghapus panel informasi mode aman dari halaman murid agar tampilan kuis lebih ringkas; perlindungan tetap aktif di belakang layar.
+- Menambahkan kuis terbit yang belum dikerjakan ke daftar pekerjaan Dashboard murid.
+- Menambahkan mode aman kuis: pembatasan seleksi, salin, klik kanan, shortcut, serta penyamaran soal saat tab kehilangan fokus.
+- Mendokumentasikan bahwa browser tidak dapat sepenuhnya mencegah screenshot sistem operasi atau foto dari perangkat lain.
+- Memperbaiki template kuis yang sebelumnya dapat gagal dikompilasi pada halaman guru.
+- Mengembalikan ukuran dan susunan form login ke proporsi awal.
+- Mengaktifkan tagihan: admin dapat menerbitkan tagihan individual/seluruh murid dan mengubah status lunas, sedangkan murid/wali melihat tagihan terkait.
+- Memperbaiki kontras, susunan teks, dan ikon pada hero halaman pertemuan.
+- Membuat alur pembuatan kuis langsung menuju bank soal agar kuis dapat segera digunakan.
+- Menambahkan notifikasi khusus kepada murid satu kelas ketika guru membagikan materi, tugas, atau kuis.
+- Memperketat data guru: sesi, mata pelajaran, guru, tugas, dan murid dibatasi pada relasi pengajaran guru tersebut.
+- Menampilkan nama teman sekelas kepada murid tanpa membocorkan email atau data profil mereka.
+- Menambahkan jadwal mengajar seluruh guru pada Dashboard admin.
+- Mengganti ikon navigasi utama, Dashboard, header, notifikasi, tema, kembali, dan logout dengan sistem SVG modern yang konsisten.
+- Menerapkan claymorphism pada kartu, tombol, input, menu, dan panel dengan kedalaman visual yang responsif.
+- Menerapkan glassmorphism secara ringan pada sidebar, topbar, navigasi mobile, notifikasi, dan panel login.
+- Menambahkan penyesuaian light mode, dark mode, desktop, dan mobile tanpa mengubah alur fitur.
+
 ## 2026-09-26
 
 - Menampilkan pusat seluruh menu sesuai role di Dashboard, sementara bottom navigation tetap lima item.

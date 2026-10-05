@@ -14,6 +14,8 @@ use App\Http\Controllers\PortalController;
 use App\Http\Controllers\AssignmentSubmissionController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\ReportCardController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
@@ -44,6 +46,12 @@ Route::middleware('auth')->group(function(){
     Route::get('/akun',[PortalController::class,'account'])->name('account');
     Route::post('/bahasa',function(\Illuminate\Http\Request $request){ $data=$request->validate(['locale'=>'required|in:id,en']); session(['locale'=>$data['locale']]); app()->setLocale($data['locale']); return back()->with('status',$data['locale']==='en'?'Language changed to English.':'Bahasa diubah ke Indonesia.'); })->name('language.update');
     Route::get('/keuangan',[ModuleController::class,'finance'])->name('finance');
+    Route::post('/keuangan/tagihan',[FinanceController::class,'store'])->middleware('role:admin')->name('finance.store');
+    Route::patch('/keuangan/tagihan/{bill}/status',[FinanceController::class,'status'])->middleware('role:admin')->name('finance.status');
+    Route::get('/rapor',[ReportCardController::class,'index'])->name('reports.index');
+    Route::get('/rapor/{report}',[ReportCardController::class,'show'])->name('reports.show');
+    Route::middleware('role:teacher')->group(function(){Route::post('/rapor',[ReportCardController::class,'store'])->name('reports.store');Route::put('/rapor/{report}/nilai',[ReportCardController::class,'grades'])->name('reports.grades');Route::patch('/rapor/{report}/ajukan',[ReportCardController::class,'submit'])->name('reports.submit');});
+    Route::patch('/rapor/{report}/review',[ReportCardController::class,'review'])->middleware('role:admin')->name('reports.review');
     Route::get('/profil',[ProfileController::class,'edit'])->name('profile.edit'); Route::put('/profil',[ProfileController::class,'update'])->name('profile.update'); Route::put('/profil/password',[ProfileController::class,'password'])->name('profile.password');
     Route::middleware('role:admin')->group(function(){ Route::get('/pengguna',[UserController::class,'index'])->name('users.index'); Route::post('/pengguna',[UserController::class,'store'])->name('users.store'); Route::get('/pengguna/{user}/edit',[UserController::class,'edit'])->name('users.edit'); Route::put('/pengguna/{user}',[UserController::class,'update'])->name('users.update'); Route::put('/pengguna/{user}/relasi',[UserController::class,'relations'])->name('users.relations'); Route::patch('/pengguna/{user}/toggle',[UserController::class,'toggle'])->name('users.toggle'); Route::post('/akademik/kelas',[AcademicController::class,'storeClass'])->name('academics.classes.store'); Route::post('/akademik/mapel',[AcademicController::class,'storeSubject'])->name('academics.subjects.store'); Route::post('/akademik/jadwal',[AcademicController::class,'storeSession'])->name('academics.sessions.store'); Route::post('/akademik/kalender',[AcademicController::class,'storeCalendar'])->name('academics.calendar.store'); });
 });

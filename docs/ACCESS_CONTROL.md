@@ -10,12 +10,14 @@ Pembatasan data diterapkan di sisi server. Navigasi yang disembunyikan hanya mem
 | Jadwal dan mata pelajaran | Semua data | Jadwal yang diampu | Jadwal kelas sendiri | Jadwal anak |
 | Pertemuan pembelajaran | Mode lihat semua data | Membuat dan mengelola hanya sesi yang diampu | Sesi terbit untuk kelas sendiri | Sesi terbit milik anak |
 | Materi, tugas, kuis, presensi pertemuan | Mode lihat sesuai kebutuhan audit | Mengelola hanya setiap pertemuan pada sesi yang diampu | Pratinjau materi, unggah tugas, mengerjakan kuis kelas sendiri | Memantau konten milik anak |
-| Data murid | Semua murid | Murid dalam kelas terkait | Diri sendiri | Anak yang terhubung |
+| Data murid | Semua murid | Murid dalam kelas yang diampu | Nama teman satu rombel tanpa email/data profil | Anak yang terhubung |
 | Presensi | Semua data | Data kelas terkait | Data sendiri | Data anak |
 | Pengajuan izin/sakit | Memeriksa semua | Memeriksa murid terkait | Mengajukan dan melihat sendiri | Mengajukan dan melihat anak |
 | Membuka QR guru | Ya | Tidak | Tidak | Tidak |
 | Membuka QR murid | Ya | Setelah presensi guru | Tidak | Tidak |
-| Tagihan SPP | Semua data | Tidak tersedia | Tagihan sendiri | Tagihan anak |
+| Tagihan SPP | Menerbitkan, melihat, menandai/batal lunas | Tidak tersedia | Melihat tagihan sendiri | Melihat tagihan anak |
+| Notifikasi konten | Audit data pembelajaran | Memicu notifikasi saat berbagi | Menerima dari kelas sendiri | Belum menerima notifikasi kelas anak |
+| Nilai dan rapor | Memeriksa, menyetujui, atau mengembalikan | Membuat dan mengubah nilai sesi yang diampu | Hanya melihat rapor sendiri yang disetujui | Hanya melihat rapor anak yang disetujui |
 | Grafik dashboard | Seluruh data | Data terkait | Tidak ditampilkan | Tidak ditampilkan |
 | Kalender akademik | Agenda sesuai target role | Agenda guru/umum | Agenda umum dan pelajaran | Agenda umum dan agenda anak |
 
@@ -27,6 +29,7 @@ Pembatasan data diterapkan di sisi server. Navigasi yang disembunyikan hanya mem
 - Guru mata pelajaran dapat mengajar banyak rombel dan banyak tingkat sekaligus.
 - Relasi guru–murid terbentuk melalui sesi kelas: guru → sesi/mapel → rombel → murid.
 - Admin mengatur struktur kelas, wali kelas, mapel, guru pengampu, dan jadwal; admin tidak mengelola isi pertemuan maupun pengumpulan tugas.
-- Admin dapat melihat seluruh data. Guru hanya melihat data yang memiliki relasi pengajaran atau wali kelas. Murid hanya melihat data sendiri. Wali melihat data sendiri dan anak yang terhubung.
+- Admin dapat melihat seluruh data. Guru hanya melihat sesi/mapel dengan `teacher_id` miliknya dan murid kelas yang diampu; sesi guru lain tidak dapat dibuka.
+- Murid dapat melihat nama anggota rombel, tetapi tidak menerima email, identitas, kontak, presensi pribadi, tugas, atau profil murid lain.
 - QR memiliki sasaran akun. QR guru hanya menerima akun guru, sedangkan QR murid hanya menerima akun murid.
 - Pengajuan yang disetujui tidak menimpa presensi QR yang sudah tercatat hadir.

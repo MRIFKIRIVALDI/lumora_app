@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Support\UserDataScope;
+use Carbon\Carbon;
 class DashboardController extends Controller
 {
     public function __invoke(Request $request)
@@ -35,10 +36,12 @@ class DashboardController extends Controller
             $classId=DB::table('class_students')->where('student_id',$user->id)->where('status','active')->value('school_class_id');
             if($classId)$studentSchedule=DB::table('class_sessions')->join('subjects','subjects.id','=','class_sessions.subject_id')->where('school_class_id',$classId)->select('class_sessions.*','subjects.name as subject')->orderBy('start_time')->get();
             $studentClasses=DB::table('class_sessions')->join('subjects','subjects.id','=','class_sessions.subject_id')->join('users','users.id','=','class_sessions.teacher_id')->join('school_classes','school_classes.id','=','class_sessions.school_class_id')->whereIn('class_sessions.id',$sessionIds)->select('class_sessions.*','subjects.name as subject','users.name as teacher','school_classes.name as class_name')->get();
-            $pendingWork=DB::table('assignments')->join('class_sessions','class_sessions.id','=','assignments.class_session_id')->join('subjects','subjects.id','=','class_sessions.subject_id')->whereIn('assignments.class_session_id',$sessionIds)->where('due_date','>',now())->select('assignments.*','subjects.name as subject')->orderBy('due_date')->limit(6)->get();
+            $assignmentWork=DB::table('assignments')->join('class_sessions','class_sessions.id','=','assignments.class_session_id')->join('subjects','subjects.id','=','class_sessions.subject_id')->whereIn('assignments.class_session_id',$sessionIds)->where('due_date','>',now())->select('assignments.id','assignments.title','assignments.due_date','subjects.name as subject')->get()->map(function($item){$item->type='assignment';$item->url=route('assignments');return $item;});
+            $quizWork=DB::table('quizzes')->join('learning_meetings','learning_meetings.id','=','quizzes.learning_meeting_id')->join('class_sessions','class_sessions.id','=','learning_meetings.class_session_id')->join('subjects','subjects.id','=','class_sessions.subject_id')->whereIn('class_sessions.id',$sessionIds)->where('quizzes.status','published')->whereNotExists(fn($q)=>$q->selectRaw('1')->from('quiz_attempts')->whereColumn('quiz_attempts.quiz_id','quizzes.id')->where('quiz_attempts.student_id',$user->id))->select('quizzes.id','quizzes.title',DB::raw("learning_meetings.meeting_date as due_date"),'subjects.name as subject')->get()->map(function($item){$item->title='Kuis: '.$item->title;$item->type='quiz';$item->url=route('quizzes.show',$item->id);return $item;});
+            $pendingWork=$assignmentWork->concat($quizWork)->sortBy('due_date')->take(8)->values();
         }
         if($user->role==='parent')$children=DB::table('users')->leftJoin('class_students','class_students.student_id','=','users.id')->leftJoin('school_classes','school_classes.id','=','class_students.school_class_id')->whereIn('users.id',$studentIds)->select('users.*','school_classes.name as class_name')->get();
-        $adminOverview=[]; $recentUsers=collect(); $classOverview=collect();
+        $adminOverview=[]; $recentUsers=collect(); $classOverview=collect(); $teacherSchedule=collect();
         if($user->role==='admin'){
             $adminOverview=[
                 'roles'=>DB::table('users')->select('role',DB::raw('count(*) as total'))->groupBy('role')->pluck('total','role'),
@@ -50,8 +53,11 @@ class DashboardController extends Controller
             ];
             $recentUsers=DB::table('users')->latest()->limit(5)->get();
             $classOverview=DB::table('school_classes')->leftJoin('class_students',fn($join)=>$join->on('class_students.school_class_id','=','school_classes.id')->where('class_students.status','active'))->leftJoin('users','users.id','=','school_classes.homeroom_teacher_id')->select('school_classes.id','school_classes.name','school_classes.grade_level','users.name as homeroom',DB::raw('count(class_students.id) as students'))->groupBy('school_classes.id','school_classes.name','school_classes.grade_level','users.name')->orderBy('school_classes.grade_level')->get();
+            $teacherSchedule=DB::table('class_sessions')->join('users','users.id','=','class_sessions.teacher_id')->join('subjects','subjects.id','=','class_sessions.subject_id')->join('school_classes','school_classes.id','=','class_sessions.school_class_id')->select('class_sessions.*','users.name as teacher_name','subjects.name as subject','school_classes.name as class_name')->orderByRaw("CASE day WHEN 'Senin' THEN 1 WHEN 'Selasa' THEN 2 WHEN 'Rabu' THEN 3 WHEN 'Kamis' THEN 4 WHEN 'Jumat' THEN 5 ELSE 6 END")->orderBy('start_time')->get();
         }
-        $weekDates=collect(range(0,6))->map(fn($i)=>now()->startOfWeek()->addDays($i));
-        return view('dashboard',compact('user','stats','announcements','schedule','todayAttendance','charts','calendarEvents','studentSchedule','studentClasses','pendingWork','children','weekDates','adminOverview','recentUsers','classOverview'));
+        $weekOffset=max(-52,min(52,(int)$request->query('week',0)));$weekDates=collect(range(0,6))->map(fn($i)=>now()->startOfWeek()->addWeeks($weekOffset)->addDays($i));
+        $monthInput=$request->query('month',now()->format('Y-m'));try{$calendarMonth=Carbon::createFromFormat('Y-m',$monthInput)->startOfMonth();}catch(\Throwable){$calendarMonth=now()->startOfMonth();}$calendarStart=$calendarMonth->copy()->startOfWeek();$calendarDays=collect(range(0,41))->map(fn($i)=>$calendarStart->copy()->addDays($i));
+        $calendarSchedule=collect();if($user->isRole('student','teacher'))$calendarSchedule=DB::table('class_sessions')->join('subjects','subjects.id','=','class_sessions.subject_id')->join('school_classes','school_classes.id','=','class_sessions.school_class_id')->whereIn('class_sessions.id',$sessionIds)->select('class_sessions.*','subjects.name as subject','school_classes.name as class_name')->get();
+        return view('dashboard',compact('user','stats','announcements','schedule','todayAttendance','charts','calendarEvents','studentSchedule','studentClasses','pendingWork','children','weekDates','weekOffset','calendarMonth','calendarDays','calendarSchedule','adminOverview','recentUsers','classOverview','teacherSchedule'));
     }
 }

@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +24,9 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('layouts.app', function ($view) {
             if (!auth()->check()) return;
-            $view->with('navNotifications', DB::table('announcements')->where(fn($q)=>$q->whereNull('target_role')->orWhere('target_role',auth()->user()->role))->latest('published_at')->limit(5)->get());
+            $announcements=DB::table('announcements')->where(fn($q)=>$q->whereNull('target_role')->orWhere('target_role',auth()->user()->role))->select('title','content','published_at');
+            $personal=Schema::hasTable('user_notifications')?DB::table('user_notifications')->where('user_id',auth()->id())->select('title','message as content','created_at as published_at'):null;
+            $view->with('navNotifications',$personal?$personal->unionAll($announcements)->orderByDesc('published_at')->limit(8)->get():$announcements->orderByDesc('published_at')->limit(8)->get());
         });
     }
 }

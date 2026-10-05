@@ -1,5 +1,12 @@
 # Catatan Pengembangan Lumora
 
+## Sistem visual dan ikon
+
+- Gunakan komponen `<x-icon name="..." />` untuk ikon antarmuka; jangan menambahkan simbol Unicode sebagai ikon baru.
+- Tambahkan path SVG pada `resources/views/components/icon.blade.php` dan gunakan `currentColor` agar kompatibel dengan light/dark mode.
+- Claymorphism digunakan pada kartu, tombol, dan bidang formulir. Glassmorphism dibatasi pada sidebar, header, navigasi mobile, dan dropdown.
+- Periksa kontras teks pada latar gradasi serta tampilan desktop dan mobile setiap kali warna diubah.
+
 PRD versi 1.2 telah ditelaah sebagai acuan produk. Implementasi saat ini memakai monolit modular Laravel 11. SQLite menjadi default demo agar aplikasi mudah dijalankan, sedangkan migrasi disiapkan tetap kompatibel dengan MySQL/XAMPP.
 
 Status fitur secara rinci berada di [FEATURES.md](FEATURES.md). Dokumen ini berfokus pada keputusan teknis dan urutan kerja berikutnya.

@@ -1,0 +1,7 @@
+@extends('layouts.app')
+@section('title','Nilai & Rapor — Lumora')
+@section('heading','Nilai & Rapor')
+@section('content')
+@if($user->role==='teacher')<section class="card report-create"><div class="section-head"><div><p class="eyebrow">RAPOR BARU</p><h2>Siapkan nilai kelas</h2></div></div><form method="post" action="{{ route('reports.store') }}" class="compact-form">@csrf<label>Kelas dan mata pelajaran<select name="class_session_id" required><option value="">Pilih sesi</option>@foreach($sessions as $session)<option value="{{ $session->id }}">{{ $session->subject }} · {{ $session->class_name }}</option>@endforeach</select></label><label>Semester<select name="semester"><option>Ganjil</option><option>Genap</option></select></label><button class="primary-button">Buat atau buka draft</button></form></section>@endif
+<section class="report-list"><div class="section-head"><div><p class="eyebrow">DATA RAPOR</p><h2>{{ $user->role==='admin'?'Persetujuan nilai':'Rapor akademik' }}</h2></div><span>{{ $reports->count() }} data</span></div><div class="report-grid">@forelse($reports as $report)<a href="{{ route('reports.show',$report->id) }}" class="card"><i><x-icon name="book"/></i><div><span class="badge {{ $report->status }}">{{ ucfirst($report->status) }}</span><h3>{{ $report->subject }}</h3><p>{{ $report->class_name }} · Semester {{ $report->semester }}</p><small>Guru: {{ $report->teacher }}</small></div><em>→</em></a>@empty<div class="card empty">Belum ada rapor yang tersedia.</div>@endforelse</div></section>
+@endsection

@@ -76,11 +76,20 @@ DB_PASSWORD=
 - Admin membuat akun dan mengaktifkan/menonaktifkan akun.
 - Admin mengubah role; satu Wali dapat memiliki banyak Murid dan tiap Murid maksimal satu Wali.
 - Light/dark mode tersimpan di perangkat.
+- Antarmuka memakai claymorphism, glassmorphism ringan, dan sistem ikon SVG modern pada navigasi, Dashboard, serta halaman Akun.
 - Pilihan Bahasa Indonesia/English tersedia di menu Akun.
 - Pemindai kamera QR tersedia bagi Guru dan Murid.
 - Admin mengelola rombel, mata pelajaran, Guru pengampu, jadwal, dan kalender akademik.
 - Guru mengelola materi, tugas, kuis PG, dan presensi manual pada setiap pertemuan tunggal maupun hasil generate berulang.
 - Murid dapat mempratinjau materi, mengunduh berkas, mengunggah tugas, mengerjakan kuis, dan menerima nilai otomatis.
+- Setelah membuat kuis, Guru langsung masuk ke bank soal PG; Murid hanya mengerjakan kuis terbit milik kelasnya satu kali.
+- Kuis terbit yang belum dikerjakan muncul di Dashboard dan halaman Tugas/Kuis murid.
+- Mode aman kuis membatasi seleksi, copy, klik kanan, shortcut umum, dan menyamarkan soal ketika tab kehilangan fokus; screenshot tingkat perangkat tidak dapat dijamin oleh teknologi browser.
+- Materi, tugas, dan kuis baru menghasilkan notifikasi internal untuk Murid dalam rombel terkait.
+- Murid melihat nama teman satu rombel tanpa memperoleh email atau data pribadinya.
+- Admin menerbitkan tagihan SPP untuk satu/seluruh Murid dan mengubah status lunas; Murid/Wali hanya melihat tagihan terkait.
+- Guru mengelola nilai Tugas, Kuis, UTS, dan UAS pada sesi yang diampu; nilai akhir dan predikat dihitung otomatis.
+- Admin menyetujui atau mengembalikan rapor dengan catatan. Murid dan Wali hanya membaca rapor yang telah disetujui melalui Dashboard.
 - Admin mengatur struktur kelas dan jadwal; hanya Guru pengampu yang mengelola pertemuan, materi, tugas, dan kuis.
 - Guru dapat menghasilkan pola pertemuan harian atau mingguan dalam satu klik, lengkap dengan rentang tanggal, hari, jam, dan lokasi.
 - Murid atau Wali dapat mengajukan izin/sakit dengan bukti; Guru terkait atau Admin menyetujui/menolak.
@@ -88,6 +97,7 @@ DB_PASSWORD=
 - Murid dapat membaca isi materi serta mengunggah atau mengganti file jawaban tugas (maksimal 10 MB).
 - Profil profesional opsional mencakup NIK, biodata, alamat, bio, dan kontak darurat; profil Murid memiliki NIS/NISN tanpa pekerjaan, sedangkan Guru memiliki NIP dan jabatan/keahlian.
 - Seluruh query akademik/presensi/tugas/keuangan dibatasi berdasarkan relasi role pengguna.
+- Sesi Guru difilter berdasarkan guru pengampu sehingga satu Guru tidak dapat membuka sesi atau data Guru lain.
 - Beranda Murid berisi kalender mingguan, pekerjaan aktif, kartu kelas, Guru, jadwal, dan progres kehadiran.
 - Profil mandiri: nama, email, telepon, foto, dan perubahan kata sandi tervalidasi.
 - Skema serta tampilan awal rombel, jadwal, presensi multi-titik, tugas via Drive, dan SPP.

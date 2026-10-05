@@ -273,4 +273,22 @@ class ExampleTest extends TestCase
         $this->actingAs($teacher)->post("/akademik/sesi/{$session->id}/pertemuan/{$meeting->id}/presensi",['statuses'=>$statuses])->assertRedirect()->assertSessionHas('status');
         $this->assertSame($studentIds->count(),\Illuminate\Support\Facades\DB::table('meeting_attendances')->where('learning_meeting_id',$meeting->id)->count());
     }
+
+    public function test_report_card_requires_admin_approval_before_student_can_view(): void
+    {
+        $this->seed();
+        $teacher=User::where('email','guru1@lumora.test')->firstOrFail();
+        $admin=User::where('email','admin1@lumora.test')->firstOrFail();
+        $session=\Illuminate\Support\Facades\DB::table('class_sessions')->where('teacher_id',$teacher->id)->first();
+        $studentIds=\Illuminate\Support\Facades\DB::table('class_students')->where('school_class_id',$session->school_class_id)->pluck('student_id');
+        $student=User::findOrFail($studentIds->first());
+        $this->actingAs($teacher)->post('/rapor',['class_session_id'=>$session->id,'semester'=>'Ganjil'])->assertRedirect();
+        $report=\Illuminate\Support\Facades\DB::table('report_cards')->where('class_session_id',$session->id)->first();
+        $this->actingAs($student)->get("/rapor/{$report->id}")->assertForbidden();
+        $grades=$studentIds->mapWithKeys(fn($id)=>[$id=>['assignment'=>80,'quiz'=>80,'mid'=>80,'final_exam'=>80,'note'=>'Baik']])->all();
+        $this->actingAs($teacher)->put("/rapor/{$report->id}/nilai",['grades'=>$grades])->assertRedirect();
+        $this->actingAs($teacher)->patch("/rapor/{$report->id}/ajukan")->assertRedirect();
+        $this->actingAs($admin)->patch("/rapor/{$report->id}/review",['decision'=>'approved'])->assertRedirect();
+        $this->actingAs($student)->get("/rapor/{$report->id}")->assertOk()->assertSee('80')->assertSee('Baik');
+    }
 }

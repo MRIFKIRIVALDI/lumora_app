@@ -52,3 +52,12 @@ if(qrCamera){
  window.addEventListener('beforeunload',stopCamera);
 }
 
+const secureQuiz=document.querySelector('.quiz-secure');
+if(secureQuiz){
+ const warning=secureQuiz.querySelector('.quiz-focus-warning'),block=event=>event.preventDefault();
+ ['copy','cut','contextmenu','dragstart'].forEach(name=>secureQuiz.addEventListener(name,block));
+ document.addEventListener('keydown',event=>{const key=event.key.toLowerCase();if((event.ctrlKey||event.metaKey)&&['c','x','a','u','s','p'].includes(key))event.preventDefault();if(event.key==='PrintScreen'){event.preventDefault();navigator.clipboard?.writeText('Screenshot dibatasi selama kuis Lumora.').catch(()=>{})}});
+ const syncFocus=()=>{const hidden=document.hidden||!document.hasFocus();secureQuiz.classList.toggle('focus-lost',hidden);if(warning)warning.hidden=!hidden};
+ document.addEventListener('visibilitychange',syncFocus);window.addEventListener('blur',syncFocus);window.addEventListener('focus',syncFocus);
+}
+
