@@ -21,17 +21,26 @@ class DashboardController extends Controller
         $todayAttendance = $user->isRole('student','teacher') ? DB::table('attendances')->where('student_id',$user->id)->whereDate('date',today())->first() : null;
         $attendanceCounts = DB::table('attendances')->whereIn('student_id',$studentIds)->whereDate('date',today())->select('status',DB::raw('count(*) as total'))->groupBy('status')->pluck('total','status');
         $presentCount=(int)($attendanceCounts['hadir']??0)+(int)($attendanceCounts['terlambat']??0); $sickCount=(int)($attendanceCounts['sakit']??0); $permitCount=(int)($attendanceCounts['izin']??0); $alphaCount=max(0,$studentIds->count()-$presentCount-$sickCount-$permitCount);
-        $paid = (float) DB::table('spp_bills')->whereIn('student_id',$studentIds)->where('status','paid')->sum('amount');
-        $pending = (float) DB::table('spp_bills')->whereIn('student_id',$studentIds)->where('status','pending')->sum('amount');
+        $financeYear=(int)now()->year;
+        $monthlyBills=DB::table('spp_bills')->whereIn('student_id',$studentIds)->where('year',$financeYear)
+            ->select('month','status',DB::raw('sum(amount) as total'))->groupBy('month','status')->get();
+        $financePaid=[];$financePending=[];
+        foreach(range(1,12) as $month){
+            $financePaid[]=(float)($monthlyBills->first(fn($row)=>(int)$row->month===$month&&$row->status==='paid')->total??0);
+            $financePending[]=(float)($monthlyBills->first(fn($row)=>(int)$row->month===$month&&$row->status==='pending')->total??0);
+        }
         $charts = [
             'weekly'=>[82,88,91,86,94,90,96],
             'payments'=>[58,64,61,73,78,84],
             'attendance'=>[$presentCount,$sickCount,$permitCount,$alphaCount],
-            'finance'=>[$paid,$pending],
+            'finance'=>['year'=>$financeYear,'paid'=>$financePaid,'pending'=>$financePending],
         ];
         $calendarEvents=DB::table('school_calendar')->where(fn($q)=>$q->whereNull('target_role')->orWhere('target_role',$user->role))->orderBy('date_start')->limit(12)->get();
         $studentSchedule=collect();
         $studentClasses=collect(); $pendingWork=collect(); $children=collect();
+        $dashboardBills=DB::table('spp_bills')->join('users','users.id','=','spp_bills.student_id')
+            ->whereIn('spp_bills.student_id',$studentIds)->where('spp_bills.status','pending')
+            ->select('spp_bills.*','users.name as student_name')->orderBy('spp_bills.year')->orderBy('spp_bills.month')->limit(6)->get();
         if($user->role==='student'){
             $classId=DB::table('class_students')->where('student_id',$user->id)->where('status','active')->value('school_class_id');
             if($classId)$studentSchedule=DB::table('class_sessions')->join('subjects','subjects.id','=','class_sessions.subject_id')->where('school_class_id',$classId)->select('class_sessions.*','subjects.name as subject')->orderBy('start_time')->get();
@@ -58,6 +67,6 @@ class DashboardController extends Controller
         $weekOffset=max(-52,min(52,(int)$request->query('week',0)));$weekDates=collect(range(0,6))->map(fn($i)=>now()->startOfWeek()->addWeeks($weekOffset)->addDays($i));
         $monthInput=$request->query('month',now()->format('Y-m'));try{$calendarMonth=Carbon::createFromFormat('Y-m',$monthInput)->startOfMonth();}catch(\Throwable){$calendarMonth=now()->startOfMonth();}$calendarStart=$calendarMonth->copy()->startOfWeek();$calendarDays=collect(range(0,41))->map(fn($i)=>$calendarStart->copy()->addDays($i));
         $calendarSchedule=collect();if($user->isRole('student','teacher'))$calendarSchedule=DB::table('class_sessions')->join('subjects','subjects.id','=','class_sessions.subject_id')->join('school_classes','school_classes.id','=','class_sessions.school_class_id')->whereIn('class_sessions.id',$sessionIds)->select('class_sessions.*','subjects.name as subject','school_classes.name as class_name')->get();
-        return view('dashboard',compact('user','stats','announcements','schedule','todayAttendance','charts','calendarEvents','studentSchedule','studentClasses','pendingWork','children','weekDates','weekOffset','calendarMonth','calendarDays','calendarSchedule','adminOverview','recentUsers','classOverview','teacherSchedule'));
+        return view('dashboard',compact('user','stats','announcements','schedule','todayAttendance','charts','calendarEvents','studentSchedule','studentClasses','pendingWork','children','dashboardBills','weekDates','weekOffset','calendarMonth','calendarDays','calendarSchedule','adminOverview','recentUsers','classOverview','teacherSchedule'));
     }
 }

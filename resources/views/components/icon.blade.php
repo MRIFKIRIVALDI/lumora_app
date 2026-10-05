@@ -25,6 +25,16 @@ $icons=[
 'language'=>'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
 'help'=>'<circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.3 2.3 0 1 1 3.5 2c-1 .6-1.3 1-1.3 2M12 17h.01"/>',
 'chevron-right'=>'<path d="m9 18 6-6-6-6"/>',
+'student'=>'<path d="m3 10 9-5 9 5-9 5-9-5Z"/><path d="M7 13.2V17c2.8 2.1 7.2 2.1 10 0v-3.8M21 10v6"/>',
+'teacher'=>'<path d="M4 4h16v12H4z"/><path d="M8 20h8M12 16v4M8 9l2 2 4-4"/>',
+'school'=>'<path d="m3 10 9-6 9 6"/><path d="M5 9v11h14V9M9 20v-6h6v6M8 11h.01M16 11h.01"/>',
+'clock'=>'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+'login'=>'<path d="m10 17-5-5 5-5M5 12h12M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>',
+'exit'=>'<path d="m14 17 5-5-5-5M19 12H7M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"/>',
+'megaphone'=>'<path d="M3 11v2a2 2 0 0 0 2 2h2l2 5h3l-2-5 9-4V5L7 9H5a2 2 0 0 0-2 2Z"/><path d="M19 8a3 3 0 0 1 0 6"/>',
+'plus'=>'<path d="M12 5v14M5 12h14"/>',
+'close'=>'<path d="m6 6 12 12M18 6 6 18"/>',
+'medical'=>'<path d="M9 4h6l1 3h3v14H5V7h3l1-3Z"/><path d="M12 10v6M9 13h6"/>',
 ];
 @endphp
 <svg {{ $attributes->merge(['class'=>'ui-icon','width'=>$size,'height'=>$size,'viewBox'=>'0 0 24 24','fill'=>'none','stroke'=>'currentColor','stroke-width'=>'1.8','stroke-linecap'=>'round','stroke-linejoin'=>'round','aria-hidden'=>'true']) }}>{!! $icons[$name]??$icons['home'] !!}</svg>

@@ -15,7 +15,7 @@ Pembatasan data diterapkan di sisi server. Navigasi yang disembunyikan hanya mem
 | Pengajuan izin/sakit | Memeriksa semua | Memeriksa murid terkait | Mengajukan dan melihat sendiri | Mengajukan dan melihat anak |
 | Membuka QR guru | Ya | Tidak | Tidak | Tidak |
 | Membuka QR murid | Ya | Setelah presensi guru | Tidak | Tidak |
-| Tagihan SPP | Menerbitkan, melihat, menandai/batal lunas | Tidak tersedia | Melihat tagihan sendiri | Melihat tagihan anak |
+| Tagihan SPP | Menerbitkan, melihat, menandai/batal lunas, grafik bulanan | Tidak tersedia | Melihat dan membayar tagihan sendiri | Melihat dan membayar tagihan anak |
 | Notifikasi konten | Audit data pembelajaran | Memicu notifikasi saat berbagi | Menerima dari kelas sendiri | Belum menerima notifikasi kelas anak |
 | Nilai dan rapor | Memeriksa, menyetujui, atau mengembalikan | Membuat dan mengubah nilai sesi yang diampu | Hanya melihat rapor sendiri yang disetujui | Hanya melihat rapor anak yang disetujui |
 | Grafik dashboard | Seluruh data | Data terkait | Tidak ditampilkan | Tidak ditampilkan |

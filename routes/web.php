@@ -48,6 +48,10 @@ Route::middleware('auth')->group(function(){
     Route::get('/keuangan',[ModuleController::class,'finance'])->name('finance');
     Route::post('/keuangan/tagihan',[FinanceController::class,'store'])->middleware('role:admin')->name('finance.store');
     Route::patch('/keuangan/tagihan/{bill}/status',[FinanceController::class,'status'])->middleware('role:admin')->name('finance.status');
+    Route::get('/keuangan/tagihan/{bill}/bayar',[FinanceController::class,'checkout'])->middleware('role:student,parent')->name('finance.checkout');
+    Route::post('/keuangan/tagihan/{bill}/bayar',[FinanceController::class,'pay'])->middleware('role:student,parent')->name('finance.pay');
+    Route::get('/keuangan/tagihan/{bill}/bayar',[FinanceController::class,'checkout'])->middleware('role:student,parent')->name('finance.checkout');
+    Route::post('/keuangan/tagihan/{bill}/bayar',[FinanceController::class,'pay'])->middleware('role:student,parent')->name('finance.pay');
     Route::get('/rapor',[ReportCardController::class,'index'])->name('reports.index');
     Route::get('/rapor/{report}',[ReportCardController::class,'show'])->name('reports.show');
     Route::middleware('role:teacher')->group(function(){Route::post('/rapor',[ReportCardController::class,'store'])->name('reports.store');Route::put('/rapor/{report}/nilai',[ReportCardController::class,'grades'])->name('reports.grades');Route::patch('/rapor/{report}/ajukan',[ReportCardController::class,'submit'])->name('reports.submit');});

@@ -291,4 +291,21 @@ class ExampleTest extends TestCase
         $this->actingAs($admin)->patch("/rapor/{$report->id}/review",['decision'=>'approved'])->assertRedirect();
         $this->actingAs($student)->get("/rapor/{$report->id}")->assertOk()->assertSee('80')->assertSee('Baik');
     }
+
+    public function test_student_and_parent_can_pay_only_their_related_bills_in_sandbox(): void
+    {
+        $student=User::factory()->create(['role'=>'student','is_active'=>true]);
+        $otherStudent=User::factory()->create(['role'=>'student','is_active'=>true]);
+        $parent=User::factory()->create(['role'=>'parent','is_active'=>true]);
+        \Illuminate\Support\Facades\DB::table('parent_student')->insert(['parent_id'=>$parent->id,'student_id'=>$student->id]);
+        $bill=\Illuminate\Support\Facades\DB::table('spp_bills')->insertGetId(['student_id'=>$student->id,'month'=>10,'year'=>2026,'amount'=>450000,'status'=>'pending','created_at'=>now(),'updated_at'=>now()]);
+        $otherBill=\Illuminate\Support\Facades\DB::table('spp_bills')->insertGetId(['student_id'=>$otherStudent->id,'month'=>10,'year'=>2026,'amount'=>450000,'status'=>'pending','created_at'=>now(),'updated_at'=>now()]);
+
+        $this->actingAs($student)->get("/keuangan/tagihan/{$bill}/bayar")->assertOk()->assertSee('Simulasi pembayaran');
+        $this->actingAs($student)->get("/keuangan/tagihan/{$otherBill}/bayar")->assertNotFound();
+        $this->actingAs($parent)->post("/keuangan/tagihan/{$bill}/bayar",['method'=>'qris'])->assertRedirect('/keuangan')->assertSessionHas('status');
+
+        $this->assertDatabaseHas('spp_bills',['id'=>$bill,'status'=>'paid']);
+        $this->assertDatabaseHas('payment_transactions',['spp_bill_id'=>$bill,'payer_id'=>$parent->id,'method'=>'qris','status'=>'success']);
+    }
 }

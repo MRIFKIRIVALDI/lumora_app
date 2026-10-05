@@ -2,6 +2,17 @@
 
 ## 2026-10-05
 
+- Mengganti simbol Unicode lama pada Dashboard seluruh role, kartu metrik admin/guru, aksi presensi, daftar tugas, kelas, pengumuman, kalender, dan rekap kehadiran dengan ikon SVG modern yang konsisten.
+- Menambahkan ikon khusus Murid, Guru, sekolah, waktu, masuk/pulang, pengumuman, kesehatan, tambah, dan status gagal ke pustaka ikon internal Lumora.
+- Mengubah grafik SPP admin menjadi grafik bulanan Januari–Desember dengan seri lunas dan menunggu berdasarkan data sebenarnya.
+- Menempatkan tagihan tertunda tepat di bawah presensi Dashboard Murid dan sebagai panel pertama Dashboard Wali.
+- Menambahkan payment sandbox lokal dengan pilihan QRIS, Virtual Account, serta dompet digital untuk pengujian tanpa akun gateway pihak ketiga.
+- Menambahkan tabel riwayat transaksi pembayaran lengkap dengan referensi, pembayar, metode, nominal, status, dan waktu bayar.
+- Membatasi halaman serta aksi pembayaran hanya untuk Murid pemilik tagihan atau Wali yang terhubung dengan murid tersebut.
+- Menambahkan `START_LUMORA.bat` untuk menyiapkan dan menjalankan aplikasi, queue, scheduler, serta Laravel Reverb melalui satu kali klik.
+- Membuka halaman Lumora di browser secara otomatis setelah server mendapat waktu untuk aktif.
+- Launcher memeriksa PHP, Composer, npm, dependensi, application key, SQLite, migrasi, cache, dan build aset sebelum server dimulai.
+- Memperjelas README bahwa mode demo SQLite tidak membutuhkan XAMPP serta membedakan penggunaan harian dari reset data demo.
 - Mengganti seluruh simbol lama pada halaman Akun dengan ikon SVG modern yang sesuai fungsi, berukuran lebih jelas, dan memiliki warna kategori konsisten.
 - Memperbarui avatar profil, tombol arah, hover menu, serta tampilan light/dark halaman Akun.
 - Menyinkronkan README, daftar fitur, arsitektur, dan panduan pengembangan dengan sistem visual serta ikon terbaru.

@@ -6,14 +6,36 @@ Lumora adalah LMS dan sistem manajemen sekolah responsif berdasarkan `PRD_Lumora
 
 Mode demo memakai SQLite, jadi Apache dan MySQL tidak wajib. Jalankan dari folder proyek:
 
+### Cara termudah di Windows
+
+Klik dua kali file **`START_LUMORA.bat`**, tunggu sampai muncul alamat
+`http://127.0.0.1:8000`. Browser akan dibuka otomatis setelah server siap.
+Biarkan jendela terminal tetap terbuka selama aplikasi digunakan. Tekan
+`Ctrl+C` untuk menghentikannya.
+
+Launcher tersebut otomatis memeriksa dependensi, menyiapkan SQLite, menjalankan
+migrasi yang belum terpasang, membangun aset, serta menyalakan aplikasi, queue,
+scheduler, dan Laravel Reverb untuk QR realtime. XAMPP tidak perlu dinyalakan
+karena mode demo tidak memakai Apache atau MySQL.
+
+Jika ingin menjalankannya melalui terminal secara manual:
+
 ```bash
-php artisan migrate:fresh --seed
-npm install
-npm run build
-php artisan serve
+composer run dev:realtime
 ```
 
 Buka `http://127.0.0.1:8000`. Seluruh akun simulasi memakai password `password`.
+
+> Gunakan `php artisan migrate:fresh --seed` hanya saat ingin menghapus seluruh
+> data dan mengembalikan akun/data demo dari awal. Jangan jalankan perintah ini
+> untuk penggunaan harian karena semua data percobaan akan terhapus.
+
+Jika launcher menampilkan **port 8000 already in use**, berarti Lumora sudah
+berjalan di terminal lain: gunakan terminal tersebut atau hentikan dengan
+`Ctrl+C`, kemudian buka launcher lagi. Jika PowerShell menolak `npm.ps1` karena
+Execution Policy, gunakan launcher atau jalankan `npm.cmd run build`. Kesalahan
+**PHP/Composer/npm tidak ditemukan** berarti aplikasi tersebut belum masuk PATH;
+launcher akan menampilkan komponen mana yang perlu dipasang atau dikonfigurasi.
 
 ### Akun admin dan guru
 
@@ -87,7 +109,9 @@ DB_PASSWORD=
 - Mode aman kuis membatasi seleksi, copy, klik kanan, shortcut umum, dan menyamarkan soal ketika tab kehilangan fokus; screenshot tingkat perangkat tidak dapat dijamin oleh teknologi browser.
 - Materi, tugas, dan kuis baru menghasilkan notifikasi internal untuk Murid dalam rombel terkait.
 - Murid melihat nama teman satu rombel tanpa memperoleh email atau data pribadinya.
-- Admin menerbitkan tagihan SPP untuk satu/seluruh Murid dan mengubah status lunas; Murid/Wali hanya melihat tagihan terkait.
+- Admin menerbitkan tagihan SPP untuk satu/seluruh Murid dan memantau grafik realisasi bulanan Januari–Desember.
+- Murid dan Wali dapat membayar tagihan terkait melalui payment sandbox lokal (QRIS, Virtual Account, atau dompet digital simulasi) sebelum integrasi gateway produksi.
+- Tagihan tertunda tampil tepat di bawah presensi pada Dashboard Murid dan menjadi informasi pertama pada Dashboard Wali.
 - Guru mengelola nilai Tugas, Kuis, UTS, dan UAS pada sesi yang diampu; nilai akhir dan predikat dihitung otomatis.
 - Admin menyetujui atau mengembalikan rapor dengan catatan. Murid dan Wali hanya membaca rapor yang telah disetujui melalui Dashboard.
 - Admin mengatur struktur kelas dan jadwal; hanya Guru pengampu yang mengelola pertemuan, materi, tugas, dan kuis.

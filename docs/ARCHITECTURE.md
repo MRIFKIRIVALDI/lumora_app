@@ -19,7 +19,7 @@ Lumora memakai modular monolith: autentikasi, akademik, presensi, profil, keluar
 - Presensi: masuk/pulang melalui GPS atau token QR dinamis.
 - Dashboard: analitik untuk admin/guru serta beranda akademik untuk murid/wali.
 - Kalender: agenda akademik umum dan agenda yang ditargetkan ke role.
-- Keuangan: penerbitan tagihan SPP individual/massal dan rekonsiliasi status lunas.
+- Keuangan: penerbitan tagihan SPP individual/massal, grafik realisasi per bulan, payment sandbox, dan rekonsiliasi status lunas.
 - Notifikasi internal: pemberitahuan materi, tugas, dan kuis berdasarkan anggota rombel.
 - Rapor: draft nilai per sesi/mapel, komponen nilai per murid, pengajuan guru, dan persetujuan admin.
 
@@ -39,6 +39,7 @@ users (parent) ── parent_student ── users (student)
 
 qr_stations ── qr_tokens ── attendances
 users (student) ── spp_bills
+spp_bills ── payment_transactions ── users (payer)
 ```
 
 `class_sessions` menjadi penghubung utama relasi guru, mapel, kelas, dan murid. Karena itu satu guru dapat mengajar banyak kelas tanpa mengubah wali kelas masing-masing.
@@ -55,7 +56,9 @@ Untuk akun guru, `UserDataScope::sessionIds()` selalu memfilter `class_sessions.
 
 ## Alur tagihan
 
-Admin menerbitkan tagihan untuk satu murid atau seluruh murid aktif. Kombinasi murid, bulan, dan tahun dibuat unik agar tidak menggandakan tagihan. Admin mengelola status `pending/paid` serta waktu pelunasan. Murid dan wali membaca tagihan melalui cakupan relasi `UserDataScope::studentIds()`.
+Admin menerbitkan tagihan untuk satu murid atau seluruh murid aktif. Kombinasi murid, bulan, dan tahun dibuat unik agar tidak menggandakan tagihan. Admin mengelola status `pending/paid` serta waktu pelunasan. Murid dan wali membaca serta membayar tagihan hanya melalui cakupan relasi `UserDataScope::studentIds()`.
+
+Payment sandbox mencatat `payer_id`, metode, nominal, referensi unik, status, payload simulasi, dan waktu bayar pada `payment_transactions`, lalu mengubah tagihan menjadi `paid` dalam satu transaksi database. Sandbox tidak menghubungi layanan eksternal dan tidak memindahkan uang. Struktur controller dan transaksi ini menjadi titik integrasi untuk Midtrans/Xendit setelah sekolah memiliki akun dan kredensial produksi.
 
 ## Alur nilai dan rapor
 

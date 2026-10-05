@@ -37,7 +37,8 @@ Keterangan: **Berjalan** berarti tersedia dan dapat dicoba; **Fondasi** berarti 
 | Presensi guru dan prasyarat QR murid | Berjalan | Admin membuka QR guru; guru yang telah hadir dapat membuka QR murid |
 | Pemindai QR lewat kamera internal | Berjalan | Guru dan murid dapat membuka kamera untuk membaca QR Lumora |
 | Google Drive | Fondasi | Belum terhubung kredensial sekolah |
-| Tagihan SPP | Berjalan | Admin menerbitkan tagihan individual/massal dan mengubah status lunas; murid/wali melihat data terkait. Payment gateway belum aktif |
+| Tagihan SPP | Berjalan | Admin menerbitkan tagihan individual/massal dan melihat grafik bulanan; murid/wali melihat dan membayar tagihan terkait melalui payment sandbox lokal |
+| Payment sandbox | Berjalan | Simulasi QRIS, Virtual Account, dan dompet digital menghasilkan referensi transaksi dan melunasi tagihan tanpa memproses uang sungguhan |
 | Notifikasi konten kelas | Berjalan | Materi, tugas, dan kuis baru masuk ke notifikasi murid pada rombel terkait |
 | Nilai dan rapor | Berjalan | Guru mengisi nilai kelas yang diampu, sistem menghitung nilai akhir/predikat, admin menyetujui atau mengembalikan, murid/wali hanya membaca rapor disetujui |
 | PWA | Fondasi | Aset dasar tersedia; audit offline/install belum final |
