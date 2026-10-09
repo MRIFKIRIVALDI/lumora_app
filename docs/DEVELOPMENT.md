@@ -2,6 +2,11 @@
 
 ## Sistem visual dan ikon
 
+- Logo utama aplikasi tetap menggunakan `logo_lumora.png` sesuai identitas resmi.
+- Tombol aksi yang memiliki konteks panjang sebaiknya memakai seluruh container
+  berbentuk kartu/pill sebagai area klik; ikon diletakkan di sisi label dan
+  bukan hanya menjadikan teks sebagai target klik.
+
 - Gunakan komponen `<x-icon name="..." />` untuk ikon antarmuka; jangan menambahkan simbol Unicode sebagai ikon baru.
 - Tambahkan path SVG pada `resources/views/components/icon.blade.php` dan gunakan `currentColor` agar kompatibel dengan light/dark mode.
 - Claymorphism digunakan pada kartu, tombol, dan bidang formulir. Glassmorphism dibatasi pada sidebar, header, navigasi mobile, dan dropdown.

@@ -1,5 +1,8 @@
 # Panduan Operasional
 
+Untuk panduan pemula yang lebih terperinci, baca
+[Tutorial Menjalankan Lumora di Localhost](CARA_MENJALANKAN.md).
+
 ## Menjalankan dari awal
 
 Prasyarat: PHP 8.2+, Composer, Node.js/npm, serta ekstensi PHP yang dibutuhkan Laravel.

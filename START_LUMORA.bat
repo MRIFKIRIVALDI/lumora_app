@@ -43,13 +43,22 @@ if errorlevel 1 (
     echo [3/5] Application key tersedia.
 )
 
-if not exist "database\database.sqlite" type nul > "database\database.sqlite"
+set "LUMORA_NEW_DATABASE=0"
+if not exist "database\database.sqlite" (
+    type nul > "database\database.sqlite"
+    set "LUMORA_NEW_DATABASE=1"
+)
 
 echo [4/5] Menyiapkan database dan cache...
 php artisan optimize:clear
 if errorlevel 1 goto :failed
 php artisan migrate --force
 if errorlevel 1 goto :failed
+if "%LUMORA_NEW_DATABASE%"=="1" (
+    echo Mengisi akun dan data demo pertama kali...
+    php artisan db:seed --force
+    if errorlevel 1 goto :failed
+)
 
 echo [5/5] Membangun tampilan...
 call npm run build

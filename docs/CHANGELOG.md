@@ -1,5 +1,14 @@
 # Riwayat Perubahan
 
+## 2026-10-09
+
+- Memperbarui ikon tombol aksi pertemuan (materi, tugas, kuis, dan presensi) agar tidak lagi memakai simbol teks lama; seluruh bentuk kartu tetap menjadi area klik.
+- Memastikan seluruh pemakaian logo tetap menggunakan `logo_lumora.png` sesuai arahan; ikon aksi memakai SVG internal.
+- Menambahkan `docs/ROADMAP_IMPLEMENTASI.md` sebagai urutan end-to-end dari penyusunan PRD, analisis sekolah, desain, coding, testing, staging, migrasi data, pilot, go-live, hingga operasional dan evaluasi.
+- Menambahkan `docs/DATABASE.md` berisi penjelasan SQLite, diagram relasi, fungsi tabel, serta cara melihat struktur melalui terminal atau aplikasi visual.
+- Menambahkan `docs/CARA_MENJALANKAN.md` sebagai tutorial lengkap menjalankan Lumora di Windows, penggunaan launcher, akun demo, dan troubleshooting localhost.
+- Memperbarui launcher agar database SQLite yang benar-benar baru otomatis diisi akun serta data demo.
+
 ## 2026-10-05
 
 - Mengganti simbol Unicode lama pada Dashboard seluruh role, kartu metrik admin/guru, aksi presensi, daftar tugas, kelas, pengumuman, kalender, dan rekap kehadiran dengan ikon SVG modern yang konsisten.

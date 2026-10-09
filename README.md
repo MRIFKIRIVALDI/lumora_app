@@ -4,6 +4,9 @@ Lumora adalah LMS dan sistem manajemen sekolah responsif berdasarkan `PRD_Lumora
 
 ## Menjalankan demo
 
+Panduan langkah demi langkah tersedia di
+**[Tutorial Menjalankan Lumora di Localhost](docs/CARA_MENJALANKAN.md)**.
+
 Mode demo memakai SQLite, jadi Apache dan MySQL tidak wajib. Jalankan dari folder proyek:
 
 ### Cara termudah di Windows
@@ -134,8 +137,11 @@ Laravel Reverb sudah aktif untuk QR dinamis. Integrasi Google, Midtrans/Xendit, 
 - [Indeks dokumentasi](docs/README.md)
 - [Fitur dan status PRD](docs/FEATURES.md)
 - [Arsitektur dan model data](docs/ARCHITECTURE.md)
+- [Struktur database SQLite](docs/DATABASE.md)
+- [Roadmap implementasi dari PRD sampai production](docs/ROADMAP_IMPLEMENTASI.md)
 - [Matriks akses setiap role](docs/ACCESS_CONTROL.md)
 - [Panduan operasional dan troubleshooting](docs/RUNBOOK.md)
+- [Tutorial menjalankan Lumora di localhost](docs/CARA_MENJALANKAN.md)
 - [Catatan teknis pengembangan](docs/DEVELOPMENT.md)
 - [Riwayat perubahan](docs/CHANGELOG.md)
 
